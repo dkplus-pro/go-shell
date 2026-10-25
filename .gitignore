@@ -26,3 +26,10 @@ yarn-error.log*
 .DS_Store
 .idea/
 .vscode/
+
+# Go build artifacts
+apps/server/bin/
+*.test
+
+# ZCode workflow drafts and run artifacts
+.zcode/

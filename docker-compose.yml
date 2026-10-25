@@ -1,0 +1,40 @@
+services:
+  pg:
+    image: postgres:17
+    container_name: go-shell-pg
+    environment:
+      POSTGRES_USER: go_shell
+      POSTGRES_PASSWORD: go_shell
+      POSTGRES_DB: go_shell
+    ports:
+      - "5432:5432"
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U go_shell -d go_shell"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+      start_period: 5s
+
+  prometheus:
+    image: prom/prometheus:latest
+    profiles: ["obs"]
+    container_name: go-shell-prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./ops/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+
+  grafana:
+    image: grafana/grafana:latest
+    profiles: ["obs"]
+    container_name: go-shell-grafana
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana_data:/var/lib/grafana
+
+volumes:
+  pg_data:
+  grafana_data:
