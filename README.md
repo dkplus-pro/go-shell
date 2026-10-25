@@ -1,12 +1,6 @@
 # Monorepo Template
 
-A pnpm + Turborepo monorepo template with shared configuration packages, a Modern.js React demo app, CI scripts, tests, and GitHub Pages deployment.
-
-## GitHub Pages
-
-- Demo URL template: [https://OWNER.github.io/REPOSITORY/](https://OWNER.github.io/REPOSITORY/)
-- After creating your GitHub repository, replace `OWNER` and `REPOSITORY` with your real GitHub org/user and repo name.
-- Enable **Settings → Pages → Build and deployment → Source: GitHub Actions**. The workflow in `.github/workflows/pages.yml` builds `apps/demo` and deploys `apps/demo/dist`.
+A pnpm + Turborepo monorepo template with shared configuration packages, a Modern.js React demo app, CI scripts, and tests.
 
 ## What's included
 
@@ -21,10 +15,8 @@ packages/
 scripts/
   ci.sh                  Full CI pipeline helper
   verify.sh              Fast local verification helper
-  deploy-github-pages.sh Build and validate Pages artifact
 .github/workflows/
   ci.yml                 Lint, typecheck, test, build
-  pages.yml              GitHub Pages deployment
 tests/
   jest/                  Repository and script unit tests
   playwright/            Demo app browser smoke test
@@ -99,16 +91,6 @@ For a first Playwright run locally, install the Chromium browser:
 pnpm exec playwright install chromium
 pnpm run test:e2e
 ```
-
-## GitHub Pages deployment
-
-Local artifact build:
-
-```bash
-GITHUB_PAGES_BASE_PATH=/REPOSITORY pnpm run build:pages
-```
-
-This builds `apps/demo/dist` and verifies that `index.html` is at the artifact root. In GitHub Actions, `pages.yml` sets `GITHUB_PAGES_BASE_PATH` from the repository name and uploads `apps/demo/dist` with the official Pages artifact action.
 
 ## Adding more workspaces
 

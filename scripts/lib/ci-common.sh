@@ -120,3 +120,30 @@ run_package_script_if_present() {
       ;;
   esac
 }
+
+# Print the absolute module directories referenced by a go.work file, one per line.
+# "go work edit -json" understands every "use" spelling (single line or block);
+# node (already required by these scripts) parses its output without extra tools.
+go_work_use_dirs() {
+  local work_file="$1"
+  local work_dir
+  work_dir="$(cd "$(dirname "$work_file")" && pwd)" || return 1
+  go work edit -json "$work_file" | node -e '
+    let input = "";
+    process.stdin.on("data", (chunk) => { input += chunk; });
+    process.stdin.on("end", () => {
+      const work = JSON.parse(input);
+      for (const use of work.Use || []) {
+        const dir = use.DiskPath || use.Path;
+        if (dir) {
+          console.log(dir);
+        }
+      }
+    });
+  ' | while IFS= read -r dir; do
+    case "$dir" in
+      /*) printf '%s\n' "$dir" ;;
+      *) printf '%s\n' "$work_dir/$dir" ;;
+    esac
+  done
+}

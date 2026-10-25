@@ -10,9 +10,9 @@ const configSource = await readFile(new URL("../modern.config.ts", import.meta.u
 test("demo app exposes standard lifecycle scripts", () => {
   assert.equal(packageJson.scripts.dev, "modern dev");
   assert.equal(packageJson.scripts.build, "modern build");
-  assert.equal(packageJson.scripts["build:github-pages"], "modern build");
-  assert.equal(packageJson.scripts["deploy:github-pages"], "pnpm --workspace-root run build:pages");
   assert.equal(packageJson.scripts.typecheck, "tsc --noEmit");
+  assert.ok(!("build:github-pages" in packageJson.scripts));
+  assert.ok(!("deploy:github-pages" in packageJson.scripts));
 });
 
 test("demo app has visible hello-world content and Modern.js app tools configured", () => {
@@ -21,11 +21,9 @@ test("demo app has visible hello-world content and Modern.js app tools configure
   assert.match(configSource, /appTools\(\)/);
 });
 
-test("demo app config supports repository-scoped GitHub Pages paths", () => {
-  assert.match(configSource, /GITHUB_PAGES_BASE_PATH/);
-  assert.match(configSource, /GITHUB_REPOSITORY/);
-  assert.match(configSource, /assetPrefix: githubPagesBasePath/);
+test("demo app config keeps dev server and flat output settings without pages logic", () => {
   assert.match(configSource, /server: { port: devServerPort }/);
   assert.match(configSource, /outputStructure: "flat"/);
   assert.match(configSource, /html: ""/);
+  assert.ok(!/GITHUB_PAGES|assetPrefix/.test(configSource));
 });

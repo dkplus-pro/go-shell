@@ -8,7 +8,6 @@
   "scripts": {
     "build": "turbo run build",
     "build:demo": "pnpm --filter @monorepo-template/demo run build",
-    "build:pages": "bash scripts/deploy-github-pages.sh",
     "ci": "bash scripts/ci.sh",
     "clean": "turbo run clean",
     "commitlint": "commitlint",
